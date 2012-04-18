@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8">
+		<title>iron kvo exam</title>
+
+		<style type="text/css">
+			
+			.wrap {
+				background-color: #f00;
+				width: 300px;
+				height: 100px;
+				text-align: center;
+				margin-bottom: 20px;
+			}
+
+			#view {
+				color: #fff;
+				font-size: 60px;
+				position: relative;
+				top: 18px;
+			}
+		
+		</style>
+
+	</head>
+	<body>
+		
+		<div class="wrap"><span id="view" class="box"></span></div>
+		
+		<input type="text" id="txt" name="txt" value="0"/>
+		<button id="btn">set model</button>
+
+		<script type="text/javascript" src="lib/iron.js"></script>
+		<script type="text/javascript" src="lib/jquery.js"></script>
+		<script type="text/javascript">
+
+			var Model = iron.Class(iron.KVO, {
+				initialize: function(){
+					iron.KVO.apply(this);
+				}
+			});
+
+			var View = iron.Class(iron.KVO, {
+
+				initialize: function () {
+					iron.KVO.apply(this);
+				},
+				
+				setElement: function(el) {
+					this._el = el;
+				//	this.addListener("key_changed", this._onChangedValue.bind(this));
+				},
+				
+				key_changed: function() {
+					this._el.innerHTML = this.get('key');
+				}
+
+				// _onChangedValue: function(e) {
+				//	this._el.innerHTML = this.get('key');	
+				// }
+			});
+
+			var Controller = iron.Class({
+				initialize: function() {
+
+					var inputEl = document.getElementById('txt');
+
+					var model = new Model();
+					model.set('key', inputEl.value);
+					
+					var view = new View();
+					view.setElement(document.getElementById('view'));
+
+					view.bindTo('key', model);
+
+					$('#btn').click(function() {
+						model.set('key', inputEl.value);
+					});
+				}
+			});
+
+			new Controller();
+		
+		</script>
+
+	</body>
+</html>
